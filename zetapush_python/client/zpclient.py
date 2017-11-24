@@ -37,6 +37,7 @@ class Client:
         self.url = apiUrl
         self.wsOpen = False                                                                 #   Say when the WS connection is open
         self.businessId = businessId                                                        #   Business ID
+        self.mustConnect = False
         self.connected = False                                                              #   When the client is connected to the ZetaPush platform
         self.login = None                                                                   #   Login to the ZP platform
         self.password = None                                                                #   Password to the ZP platform
@@ -74,7 +75,7 @@ class Client:
         self.wsOpen = True
 
         # Try to connect if applicable
-        if self.login:
+        if self.mustConnect:
             self._do_connect()
 
     def listenMsg(self, ws, msg):
@@ -92,7 +93,7 @@ class Client:
 
     def _do_connect(self):
         jsonMessage = self._formatJSONHandshake()
-
+        self.mustConnect = False
         self.ws.send(jsonMessage)
 
     def connect(self, login=None, password=None, authenticationService=None, authenticationType=None):
@@ -110,6 +111,10 @@ class Client:
             self.authenticationId = "weak_0"
             self.versionAuthentication = "weak"
 
+        if self.wsOpen:
+            self._do_connect()
+        else:
+            self.mustConnect = True
 
     def disconnect(self):
         """ Launch the disconnection to the ZetaPush platform """
