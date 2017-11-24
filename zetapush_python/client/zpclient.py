@@ -48,7 +48,7 @@ class Client:
         self.ws = websocket.WebSocketApp(self.getUrlServer(), on_message = self.listenMsg, on_error = self.listenError, on_close = self.wsClosed)
         self.ws.on_open = self.wsOpened
         self.pattern = re.compile("/service/*")
-        self.thread = Thread(target=self.ws.run_forever).start()
+        self.thread = Thread(target=self.ws.run_forever)
         self.services = {}
         self.onConnectionSuccess = None                                                     #   Callback connection success
 
@@ -100,6 +100,9 @@ class Client:
         """ Launch the connection to the ZetaPush platform
         If you set authenticationService or auhenticationType, you need to set both.
         authenticationType can only be 'simple' or 'weak'"""
+
+        if not self.thread.is_alive():
+            self.thread.start()
 
         self.login = login
         self.password = password
