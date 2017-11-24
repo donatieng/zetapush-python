@@ -110,10 +110,6 @@ class Client:
             self.authenticationId = "weak_0"
             self.versionAuthentication = "weak"
 
-        # Wait the WS connection is established
-        time.sleep(0.2)
-        if self.wsOpen:
-            self._do_connect()
 
     def disconnect(self):
         """ Launch the disconnection to the ZetaPush platform """
