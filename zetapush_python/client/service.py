@@ -94,7 +94,11 @@ class Service:
         for json_path in json_paths:
             node = data
             for json_path_item in json_path:
-                node = node[json_path_item]
+                if json_path_item in node:
+                    node = node[json_path_item]
+                else:
+                    node = None
+                    break
             params.append(node)
         function(*params)
 
